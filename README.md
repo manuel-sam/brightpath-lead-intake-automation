@@ -1,6 +1,6 @@
 # Brightpath | Lead Intake & Follow-Up
 
-### Turn new enquiries into clear sales priorities — and make sure promising prospects get attention.
+### Turn new enquiries into clear sales priorities and make sure promising prospects get attention.
 
 When enquiries arrive, the challenge is not simply collecting names and email addresses. It is knowing who deserves attention first, keeping every enquiry organized, and responding while the prospect is still interested.
 

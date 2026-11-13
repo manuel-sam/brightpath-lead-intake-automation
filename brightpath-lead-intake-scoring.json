@@ -1,1 +1,1080 @@
-PLACEHOLDER
+{
+  "name": "Brightpath | Lead Intake & Scoring",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Let's talk about your project",
+        "formDescription": "Tell us a little about your business and what you're looking to improve. We'll review your information and get back to you.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "your full name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "company",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "your email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What's your approximate budget for this project?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Under $2,000"
+                  },
+                  {
+                    "option": "$2,000 – $4,999"
+                  },
+                  {
+                    "option": "$5,000 – $9,999"
+                  },
+                  {
+                    "option": "$10,000 – $19,999"
+                  },
+                  {
+                    "option": "$20,000+"
+                  },
+                  {
+                    "option": "Not sure"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "How soon are you looking to get started?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "ASAP / Within 2 weeks"
+                  },
+                  {
+                    "option": "Within 30 days"
+                  },
+                  {
+                    "option": "1–3 months"
+                  },
+                  {
+                    "option": "Just exploring"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What service are you interested in?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Marketing automation"
+                  },
+                  {
+                    "option": "AI automation"
+                  },
+                  {
+                    "option": "Lead generation"
+                  },
+                  {
+                    "option": "CRM / Sales automation"
+                  },
+                  {
+                    "option": "Data & reporting"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tell us about your project and what you're hoping to improve.",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -1680,
+        -352
+      ],
+      "id": "266fb63b-609f-4aa7-9efa-150c34df937a",
+      "name": "On form submission"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "abc1a47e-9d27-4184-8712-6207f3e022ea",
+              "name": "lead_id",
+              "value": "=BP-{{$now.toMillis()}}",
+              "type": "string"
+            },
+            {
+              "id": "35de8971-7815-40da-917b-6363434a890c",
+              "name": "submittedAt",
+              "value": "={{ $json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "005ee0b9-9bc1-447e-959a-4b76473da5fe",
+              "name": "name",
+              "value": "={{ $json['your full name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9eab981f-3f4f-4fbb-b4a7-b8ece949ec07",
+              "name": "company",
+              "value": "={{ $json.company }}",
+              "type": "string"
+            },
+            {
+              "id": "c93efe00-3039-4a11-8838-324209e33e4a",
+              "name": "email",
+              "value": "={{ $json['your email'] }}",
+              "type": "string"
+            },
+            {
+              "id": "03c4f0e6-4954-4974-a51e-47f2ab4fc037",
+              "name": "budget",
+              "value": "={{ $json['What\\'s your approximate budget for this project?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "fab9a8c9-49b1-4946-aebf-2919a47cd820",
+              "name": "urgency",
+              "value": "={{ $json['How soon are you looking to get started?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e27a3e9f-3133-4a17-a2a1-0796ffb3ee82",
+              "name": "service",
+              "value": "={{ $json['What service are you interested in?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e18b805f-8060-47a3-b512-ca54b3a655f7",
+              "name": "description",
+              "value": "={{ $json['Tell us about your project and what you\\'re hoping to improve.'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1520,
+        -352
+      ],
+      "id": "3f221998-ea00-404b-9d73-638b256258e5",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// ============================================\n// BRIGHTPATH CONSULTING - LEAD SCORING\n// ============================================\n\n// Get the data from the Edit Fields node\nconst lead = $json;\n\n// --------------------------------------------\n// 1. READ LEAD INFORMATION\n// --------------------------------------------\n\nconst name = lead.name;\nconst email = lead.email;\nconst company = lead.company;\nconst budget = lead.budget;\nconst urgency = lead.urgency;\nconst service = lead.service;\nconst description = lead.description;\nconst submittedAt = lead.submittedAt;\n\n// Keep the existing Lead ID if available.\n// If it doesn't exist, create one.\nconst leadId = lead.lead_id || `BP-${Date.now()}`;\n\n\n// --------------------------------------------\n// 2. SCORE THE BUDGET\n// --------------------------------------------\n\nlet budgetScore = 0;\n\nswitch (budget) {\n\n  case 'Under $2,000':\n    budgetScore = 10;\n    break;\n\n  case '$2,000 – $4,999':\n    budgetScore = 20;\n    break;\n\n  case '$5,000 – $9,999':\n    budgetScore = 35;\n    break;\n\n  case '$10,000 – $19,999':\n    budgetScore = 50;\n    break;\n\n  case '$20,000+':\n    budgetScore = 60;\n    break;\n\n  case 'Not sure':\n    budgetScore = 5;\n    break;\n\n  default:\n    budgetScore = 0;\n}\n\n\n// --------------------------------------------\n// 3. SCORE THE URGENCY\n// --------------------------------------------\n\nlet urgencyScore = 0;\n\nswitch (urgency) {\n\n  case 'ASAP / Within 2 weeks':\n    urgencyScore = 40;\n    break;\n\n  case 'Within 30 days':\n    urgencyScore = 30;\n    break;\n\n  case '1–3 months':\n    urgencyScore = 15;\n    break;\n\n  case 'Just exploring':\n    urgencyScore = 5;\n    break;\n\n  default:\n    urgencyScore = 0;\n}\n\n\n// --------------------------------------------\n// 4. CALCULATE TOTAL SCORE\n// --------------------------------------------\n\nconst totalScore = budgetScore + urgencyScore;\n\n\n// --------------------------------------------\n// 5. DETERMINE LEAD CATEGORY\n// --------------------------------------------\n\nlet category;\n\nif (totalScore >= 70) {\n  category = 'Hot';\n} else if (totalScore >= 40) {\n  category = 'Warm';\n} else {\n  category = 'Cold';\n}\n\n\n// --------------------------------------------\n// 6. CREATE EMAIL STATUS\n// --------------------------------------------\n\n// Only Hot leads should enter the AI email process.\n\nlet emailStatus;\n\nif (category === 'Hot') {\n  emailStatus = 'Pending AI Email';\n} else {\n  emailStatus = 'Not Required';\n}\n\n\n// --------------------------------------------\n// 7. RETURN CLEAN OUTPUT\n// --------------------------------------------\n\nreturn {\n  json: {\n    lead_id: leadId,\n    submittedAt: submittedAt,\n\n    name: name,\n    email: email,\n    company: company,\n\n    budget: budget,\n    budget_score: budgetScore,\n\n    urgency: urgency,\n    urgency_score: urgencyScore,\n\n    service: service,\n    description: description,\n\n    total_score: totalScore,\n    category: category,\n\n    email_status: emailStatus,\n\n    email_sent_at: '',\n    error_review_note: ''\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        -352
+      ],
+      "id": "81edfb51-72e6-4a31-ba52-5a7d57c40928",
+      "name": "Score Lead"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Brightpath Consulting",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMzYNyJFE7nZabsocKbgjjecR3Q57l09pyrTomjZI9I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_TAB",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMzYNyJFE7nZabsocKbgjjecR3Q57l09pyrTomjZI9I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $json.lead_id }}",
+            "SubmittedAt": "={{ $json.submittedAt }}",
+            "Name": "={{ $json.name }}",
+            "Company": "={{ $json.company }}",
+            "Email": "={{ $json.email }}",
+            "Urgency": "={{ $json.urgency }}",
+            "Budget": "={{ $json.budget }}",
+            "Service Interest": "={{ $json.service }}",
+            "Score": "={{ $json.total_score }}",
+            "Description": "={{ $json.description }}",
+            "Category": "={{ $json.category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "SubmittedAt",
+              "displayName": "SubmittedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service Interest",
+              "displayName": "Service Interest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent At",
+              "displayName": "Email Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error / Review",
+              "displayName": "Error / Review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1200,
+        -352
+      ],
+      "id": "4fedbcf7-7312-4d73-9b11-74f05fcffae2",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f7f2afc6-e4d9-4237-a37d-009164a50261",
+              "leftValue": "={{ $json.Category }}",
+              "rightValue": "=Hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "e358f189-194f-4109-92e2-f5e0f073ae17",
+              "leftValue": "={{ $json.Category }}",
+              "rightValue": "hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1040,
+        -352
+      ],
+      "id": "54bb38f7-316a-42b9-af78-c673a3fe0890",
+      "name": "Is lead Hot?"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1632,
+        80
+      ],
+      "id": "88398d77-afbf-4158-8701-09fb38c9885d",
+      "name": "Google Gemini Chat Model1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a personalized follow-up email using the following lead information.\n\nLead name:\n{{ $('Edit Fields1').item.json.name }}\n\nCompany:\n{{ $json.Company }}\n\nEmail:\n{{ $json.Email }}\n\nDescription:\n{{ $('Edit Fields1').item.json.description }}\n\nUse only the information provided above.\n\nThe approved company signature is:\n\nBest,\nMarcus Bright\nFounder, Brightpath Consulting",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are the lead follow-up email writer for Brightpath Consulting.  Your job is to write a short, natural, personalized first-response email to a new high-priority business lead.  Follow these rules strictly:  1. Write like a real founder or consultant, not like an AI assistant. 2. Keep the email concise. Aim for approximately 80–130 words. 3. Address the lead by their first name when possible. 4. Mention the service they asked about naturally. 5. Use one relevant detail from their description when one is available. 6. Do not mention the lead's budget, lead score, or Hot/Warm/Cold classification. 7. Do not invent facts about the lead, their company, their systems, their problems, or their business. 8. Do not invent pricing, guarantees, services, results, partnerships, or claims. 9. Do not say that you reviewed anything that was not actually provided. 10. Do not use exaggerated sales language. 11. Do not use phrases such as \"I hope this email finds you well\", \"I am thrilled\", \"exciting opportunity\", or other generic AI-sounding phrases. 12. Ask for a short 15-minute conversation. 13. Keep the tone professional, warm, direct, and human. 14. Use the approved signature exactly as provided. 15. Return ONLY the email body. Do not return analysis, explanations, JSON, markdown, or a subject line."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -1632,
+        -80
+      ],
+      "id": "d93ff3c9-7599-42b2-be1c-63c8f28c1698",
+      "name": "Generate hot lead email"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// ============================================\n// BRIGHTPATH CONSULTING\n// HOT LEAD EMAIL VALIDATION & CLEANUP\n// ============================================\n\n// Gemini's response from the Basic LLM Chain\nlet emailBody = $json.text;\n\n// Make sure we actually received a response\nif (typeof emailBody !== 'string' || emailBody.trim() === '') {\n  return {\n    json: {\n      ...$json,\n      email_valid: false,\n      email_status: 'Review Required',\n      validation_error: 'Gemini returned an empty response.',\n      cleaned_email: ''\n    }\n  };\n}\n\n\n// ============================================\n// 1. CLEAN GEMINI OUTPUT\n// ============================================\n\n// Remove leading/trailing whitespace\nemailBody = emailBody.trim();\n\n// Convert literal \\n characters into real line breaks\nemailBody = emailBody.replace(/\\\\n/g, '\\n');\n\n// Remove markdown code fences if Gemini adds them\nemailBody = emailBody.replace(/^```(?:text|markdown)?\\s*/i, '');\nemailBody = emailBody.replace(/\\s*```$/i, '');\n\n// Remove accidental \"Subject:\" line if Gemini returns one\nemailBody = emailBody.replace(/^Subject:.*\\n+/i, '');\n\n// Clean excessive blank lines\nemailBody = emailBody.replace(/\\n{3,}/g, '\\n\\n');\n\n// Trim again after cleanup\nemailBody = emailBody.trim();\n\n\n// ============================================\n// 2. BASIC QUALITY CHECKS\n// ============================================\n\nconst errors = [];\n\n\n// Check minimum length\nif (emailBody.length < 80) {\n  errors.push('Email is too short.');\n}\n\n\n// Check maximum length\nif (emailBody.length > 1500) {\n  errors.push('Email is unusually long.');\n}\n\n\n// ============================================\n// 3. CHECK FOR REQUIRED SIGNATURE\n// ============================================\n\nif (!emailBody.includes('Marcus Bright')) {\n  errors.push('Marcus Bright signature is missing.');\n}\n\nif (!emailBody.includes('Founder, Brightpath Consulting')) {\n  errors.push('Company signature is missing.');\n}\n\n\n// ============================================\n// 4. CHECK FOR INTERNAL INFORMATION\n// ============================================\n\n// Gemini should never expose our internal lead scoring system.\n\nconst forbiddenTerms = [\n  'hot lead',\n  'warm lead',\n  'cold lead',\n  'lead score',\n  'score: 90',\n  'score:',\n  'lead category',\n  'internal score'\n];\n\nconst lowerEmail = emailBody.toLowerCase();\n\nfor (const term of forbiddenTerms) {\n  if (lowerEmail.includes(term.toLowerCase())) {\n    errors.push(`Internal information detected: \"${term}\".`);\n  }\n}\n\n\n// ============================================\n// 5. CHECK FOR AI/TECHNICAL OUTPUT\n// ============================================\n\n// These are signs Gemini may have returned something\n// other than a normal email.\n\nconst technicalPatterns = [\n  '```',\n  '\"email\":',\n  '\"subject\":',\n  '\"body\":',\n  'here is the email',\n  'here\\'s the email',\n  'sure, here',\n  'as an ai'\n];\n\nfor (const pattern of technicalPatterns) {\n  if (lowerEmail.includes(pattern.toLowerCase())) {\n    errors.push(`Unexpected AI/technical output detected: \"${pattern}\".`);\n  }\n}\n\n\n// ============================================\n// 6. CHECK FOR PLACEHOLDER TEXT\n// ============================================\n\nconst placeholders = [\n  '[name]',\n  '[company]',\n  '[service]',\n  '[description]',\n  '[your name]',\n  '[insert',\n  '<name>',\n  '<company>',\n  '<service>'\n];\n\nfor (const placeholder of placeholders) {\n  if (lowerEmail.includes(placeholder.toLowerCase())) {\n    errors.push(`Placeholder text detected: \"${placeholder}\".`);\n  }\n}\n\n\n// ============================================\n// 7. FINAL VALIDATION RESULT\n// ============================================\n\nconst emailValid = errors.length === 0;\n\nlet emailStatus;\n\nif (emailValid) {\n  emailStatus = 'Ready to Send';\n} else {\n  emailStatus = 'Review Required';\n}\n\n\n// ============================================\n// 8. RETURN RESULT\n// ============================================\n\nreturn {\n  json: {\n    ...$json,\n\n    cleaned_email: emailBody,\n\n    email_valid: emailValid,\n\n    email_status: emailStatus,\n\n    validation_error: errors.length > 0\n      ? errors.join(' ')\n      : ''\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1344,
+        -80
+      ],
+      "id": "72ed529f-037b-4aa2-9704-925435a3c25a",
+      "name": "Hot lead email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').item.json.email }}",
+        "subject": "Following up on your Brightpath inquiry",
+        "emailType": "text",
+        "message": "={{ $json.cleaned_email }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1008,
+        -144
+      ],
+      "id": "7be17396-24ad-40df-92a1-9f78c8cbfabd",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2b506c83-7056-4454-a175-4b5f018ee6b5",
+              "leftValue": "={{ $json.email_valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1184,
+        -80
+      ],
+      "id": "270751eb-1dbc-41b8-b74a-8a8fb84e38ec",
+      "name": "Email valid?"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// ============================================\n// BRIGHTPATH CONSULTING\n// HOT LEAD EMAIL - MANUAL REVIEW\n// ============================================\n\n// The email failed one or more validation checks.\n// DO NOT send it automatically.\n\n// Get the validation error\nconst validationError = $json.validation_error || 'Unknown validation error';\n\n// Create a clean review status\nconst reviewStatus = 'Review Required';\n\n// Return the lead information plus the review details\nreturn {\n  json: {\n    lead_id: $json.lead_id,\n    submittedAt: $json.submittedAt,\n\n    name: $json.name,\n    email: $json.email,\n    company: $json.company,\n\n    budget: $json.budget,\n    urgency: $json.urgency,\n    service: $json.service,\n\n    score: $json.total_score,\n    category: $json.category,\n\n    email_status: reviewStatus,\n\n    validation_error: validationError,\n\n    generated_email: $json.cleaned_email || '',\n\n    review_required: true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1008,
+        0
+      ],
+      "id": "f089814e-95ff-478b-9d63-91a62641b980",
+      "name": "Flag for Manual Review",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Brightpath Consulting",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMzYNyJFE7nZabsocKbgjjecR3Q57l09pyrTomjZI9I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_TAB",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMzYNyJFE7nZabsocKbgjjecR3Q57l09pyrTomjZI9I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Sent At": "={{ $now }}",
+            "id": "=",
+            "Lead ID": "={{ $('Edit Fields1').item.json.lead_id }}",
+            "Email Status": "=Sent"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SubmittedAt",
+              "displayName": "SubmittedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service Interest",
+              "displayName": "Service Interest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Sent At",
+              "displayName": "Email Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Error / Review",
+              "displayName": "Error / Review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "threadId",
+              "displayName": "threadId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "labelIds",
+              "displayName": "labelIds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -848,
+        -144
+      ],
+      "id": "0625464e-bb61-4f40-a43e-bb993edd8f8f",
+      "name": "Mark email sent"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Brightpath Consulting",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMzYNyJFE7nZabsocKbgjjecR3Q57l09pyrTomjZI9I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_TAB",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMzYNyJFE7nZabsocKbgjjecR3Q57l09pyrTomjZI9I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $('Edit Fields1').item.json.lead_id }}",
+            "Error / Review": "={{ $('Hot lead email').item.json.validation_error }}",
+            "Email Status": "Review required"
+          },
+          "matchingColumns": [
+            "Lead ID"
+          ],
+          "schema": [
+            {
+              "id": "Lead ID",
+              "displayName": "Lead ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SubmittedAt",
+              "displayName": "SubmittedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service Interest",
+              "displayName": "Service Interest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent At",
+              "displayName": "Email Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error / Review",
+              "displayName": "Error / Review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -848,
+        0
+      ],
+      "id": "ec95da2c-a869-4c88-ab04-734486bf35b6",
+      "name": "Mark Email for Review",
+      "alwaysOutputData": true
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Score Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Lead": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Is lead Hot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is lead Hot?": {
+      "main": [
+        [
+          {
+            "node": "Generate hot lead email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate hot lead email",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate hot lead email": {
+      "main": [
+        [
+          {
+            "node": "Hot lead email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hot lead email": {
+      "main": [
+        [
+          {
+            "node": "Email valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email valid?": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag for Manual Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag for Manual Review": {
+      "main": [
+        [
+          {
+            "node": "Mark Email for Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Mark email sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "nodeGroups": [],
+  "tags": []
+}

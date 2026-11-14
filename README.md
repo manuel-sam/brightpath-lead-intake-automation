@@ -86,7 +86,7 @@ These spaces are here for screenshots from the actual project. The notes explain
 ### 1. New enquiry workflow
 
 <!-- Add screenshot: images/01-enquiry-workflow.png -->
-![New enquiry workflow](images/01-enquiry-workflow.png)
+![New enquiry workflow](1 Brightpath automation ai automation gmail node n8n automation.png)
 
 *Capture the full first workflow on the n8n canvas. Zoom out enough to show the form, lead scoring, Google Sheets, follow-up message, and review steps. Keep the node labels readable.*
 

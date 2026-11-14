@@ -1,97 +1,118 @@
-# Brightpath | Lead Intake & Follow-Up
+# Brightpath Lead Management
 
-### Turn new enquiries into clear sales priorities and make sure promising prospects get attention.
+## Keep new enquiries organised and make it easier to follow up.
 
-When enquiries arrive, the challenge is not simply collecting names and email addresses. It is knowing who deserves attention first, keeping every enquiry organized, and responding while the prospect is still interested.
+When a business gets enquiries from potential customers, someone has to collect the details, work out which ones deserve attention first, and make sure nobody gets forgotten.
 
-This project demonstrates how a business can bring those steps into one connected process instead of relying on someone to review every enquiry manually.
+That can become difficult when enquiries keep coming in and the team is busy serving existing customers.
 
-## The business problem
+Brightpath is a portfolio project built around that everyday problem. It brings lead intake, prioritisation, follow-up, and a daily lead report into one process.
 
-A growing consultancy or service business can receive enquiries with very different levels of urgency and buying readiness. When every enquiry lands in the same inbox, it becomes easy to:
+## What it does
 
-- Miss a promising opportunity among less urgent enquiries.
-- Spend time reviewing every enquiry in the same way.
-- Lose track of who asked for what, their budget, or when they want to get started.
-- Delay the first response while the prospect is still considering their options.
-- Send a rushed or poorly checked follow-up.
+There are two connected parts to this project.
 
-## What this solution is designed to do
+### 1. New enquiry handling
 
-A prospect completes a short enquiry form. From there, the process:
+When someone submits the enquiry form, the workflow:
 
-1. **Collects the important details** — name, company, contact information, service interest, budget, timing, and project description.
-2. **Helps identify who needs attention first** — each enquiry receives a priority score based on the prospect's stated budget and urgency.
-3. **Makes the sales pipeline easier to review** — enquiries and their details are organized in one tracking sheet, with a clear priority category.
-4. **Prepares a more personal first response** — for high-priority enquiries, an AI-assisted draft is created using the information the prospect actually submitted.
-5. **Checks the response before it goes out** — the message is reviewed for basic quality and missing information. Messages that do not pass are sent for human review rather than being sent automatically.
+- Collects their contact details and what they are looking for.
+- Looks at the budget and how soon they want to get started.
+- Gives the enquiry a score and marks it Hot, Warm, or Cold.
+- Saves the details in a lead tracking sheet.
+- Prepares a more personal follow-up for high-priority enquiries.
+- Checks the message before sending it. If it does not pass the checks, it is held for a person to review.
 
-## A look at the process
+The idea is simple: your team should not have to treat every enquiry as if it has the same level of urgency.
 
-The screenshots below are intentionally left as spaces. They show the specific parts a prospective client will want to see: how the process is connected, what a prospect fills in, how enquiries are organized, and what the follow-up looks like.
+### 2. Daily lead summary
 
-### 1. The complete enquiry-to-follow-up process
+The second workflow runs every morning at 8:00. It checks the lead sheet and looks at enquiries received in the previous 24 hours.
 
-<!-- Add screenshot: images/01-workflow-overview.png -->
-![Full workflow overview](images/01-workflow-overview.png)
+It then puts together a report showing:
 
-*Screenshot to add: Open the Brightpath workflow in n8n and zoom out until the complete workflow canvas and its connected steps are visible. Keep the node names readable. Do not show credential panels, account menus, or private data.*
+- How many new enquiries came in.
+- How many were marked Hot, Warm, and Cold.
+- The details of each lead, including the company, budget, service interest, urgency, and score.
 
-### 2. The enquiry form a prospect completes
+The report is sent by email, so the business owner or sales team can see what came in without going through every row in the sheet.
 
-<!-- Add screenshot: images/02-enquiry-form.png -->
-![Enquiry form](images/02-enquiry-form.png)
+## Why this is useful
 
-*Screenshot to add: Open the n8n form preview and capture the actual Brightpath enquiry form, including the questions about contact details, service interest, budget, timing, and project description. Use the blank form before submitting anything.*
+A new enquiry is only useful if someone notices it and follows up.
 
-### 3. How incoming enquiries are organized
+This setup gives a business a clearer way to see which prospects may need attention, keep their details in one place, and start each day with a quick picture of recent enquiries.
 
-<!-- Add screenshot: images/03-lead-tracking-sheet.png -->
-![Lead tracking sheet](images/03-lead-tracking-sheet.png)
+It does not make sales decisions for your team. It helps your team see what is happening and decide what to do next.
 
-*Screenshot to add: Open the Google Sheet used for lead tracking and capture the column headings plus a few example rows. Use fictional sample details only. Hide or remove real names, email addresses, phone numbers, spreadsheet URLs, and any other private information.*
+## Screenshots
 
-### 4. Example of the personalized follow-up
+These spaces are here for screenshots from the actual project. The notes explain exactly what to capture.
 
-<!-- Add screenshot: images/04-follow-up-email.png -->
-![Follow-up email example](images/04-follow-up-email.png)
+### 1. New enquiry workflow
 
-*Screenshot to add: Capture an example of the AI-assisted follow-up email generated for a high-priority enquiry. Use fictional prospect details and make sure no real recipient address, personal inbox, or account information is visible.*
+<!-- Add screenshot: images/01-enquiry-workflow.png -->
+![New enquiry workflow](images/01-enquiry-workflow.png)
 
-## What this can mean for your business
+*Capture the full first workflow on the n8n canvas. Zoom out enough to show the form, lead scoring, Google Sheets, follow-up message, and review steps. Keep the node labels readable.*
 
-- **Faster attention for serious enquiries:** your team has a clearer view of which prospects may need a response first.
-- **Fewer opportunities overlooked:** new enquiries are captured and recorded in a consistent place.
-- **A more organized sales process:** budget, urgency, service interest, and follow-up status are easier to review.
-- **More relevant first responses:** follow-up messages can reflect what each prospect said instead of relying on the same generic reply.
-- **Human oversight where it matters:** a message that does not meet the checks can be held for review.
+### 2. Daily summary workflow
 
-The goal is not to replace your sales team. It is to help them spend less time sorting enquiries and more time having useful conversations with the right prospects.
+<!-- Add screenshot: images/02-daily-summary-workflow.png -->
+![Daily summary workflow](images/02-daily-summary-workflow.png)
 
-## Example journey
+*Open the Brightpath Daily Lead Summary workflow in n8n. Capture the full canvas showing the schedule, Google Sheets lookup, 24-hour filter, summary creation, and email step.*
 
-**A prospect submits an enquiry → their details are organized → their buying urgency and budget are assessed → the enquiry is marked by priority → a suitable first response can be prepared and checked → the team can follow up.**
+### 3. Enquiry form
 
-## Built for
+<!-- Add screenshot: images/03-enquiry-form.png -->
+![Enquiry form](images/03-enquiry-form.png)
 
-This approach can be useful for consultancies, B2B service providers, agencies, and other businesses that receive enquiries and need a dependable way to prioritize and follow up with potential customers.
+*Open the form preview for the first workflow. Capture the blank form with the questions a potential customer answers, including their contact details, service interest, budget, urgency, and project description.*
 
-## Project details
+### 4. Lead tracking sheet
 
-- **Project type:** Workflow demonstration / portfolio project
-- **Business scenario:** Brightpath Consulting
-- **Main purpose:** Lead intake, prioritization, organized tracking, and assisted follow-up
-- **Tools used:** n8n, Google Gemini, Google Sheets, and Gmail
-- **Workflow status:** Intentionally inactive. This repository is a demonstration of the proposed process, not a live service or a claim of measured client results.
+<!-- Add screenshot: images/04-lead-tracking-sheet.png -->
+![Lead tracking sheet](images/04-lead-tracking-sheet.png)
 
-The workflow export is included so the process can be reviewed. Before a live rollout, the business's own accounts, tracking sheet, email rules, and priority-routing settings would need to be connected, checked, and tested with the client.
+*Open the Google Sheet used by the workflows. Capture the column headings and a few sample rows so someone can see how enquiries, scores, and categories are recorded. Use made-up sample details only.*
 
-## Included in this repository
+### 5. Follow-up email
 
-- `brightpath-lead-intake-scoring.json` — a sanitized copy of the workflow export. Private account references, credential links, spreadsheet identifiers, and personal email details have been removed.
+<!-- Add screenshot: images/05-follow-up-email.png -->
+![Follow-up email](images/05-follow-up-email.png)
 
-## Want a process like this in your business?
+*Capture an example of the follow-up prepared for a Hot lead. Use a fictional prospect and hide all private inbox details. Show the message itself, not your account settings.*
 
-If your team receives enquiries but struggles to decide who to contact first, keep track of every prospect, or follow up consistently, I can help map out a process that fits the way your business actually works.
+### 6. Daily summary email
 
-**The first step is a conversation about how enquiries arrive today, where follow-up gets stuck, and what a better process should look like.**
+<!-- Add screenshot: images/06-daily-summary-email.png -->
+![Daily summary email](images/06-daily-summary-email.png)
+
+*Capture the daily report email showing the total number of leads and the Hot, Warm, and Cold sections. Use fictional sample data and hide the recipient address and any private information.*
+
+## Tools used
+
+- n8n
+- Google Sheets
+- Google Gemini
+- Gmail
+
+## Project notes
+
+This is a portfolio demonstration based on a business scenario. It is not presented as a live client deployment, and no client results are being claimed.
+
+Both workflow exports are included in this repository. They are intentionally inactive. The public copies have been cleaned of credential references and private account details. The spreadsheet ID and email recipient are placeholders, so the workflows need to be connected to the business's own accounts and tested before use.
+
+The daily report is scheduled for 8:00 according to the timezone configured in the n8n environment. It uses a rolling 24-hour window, not a calendar-day report.
+
+## Files in this repository
+
+- `brightpath-lead-intake-scoring.json`: collects and prioritises new enquiries, records them, and prepares a follow-up.
+- `brightpath-daily-lead-summary.json`: checks the previous 24 hours of enquiries and emails a daily report.
+
+## Need a better way to handle incoming enquiries?
+
+If enquiries are coming in but your team is finding it hard to keep track of them, decide who to contact first, or follow up consistently, I can help you map out a process that fits your business.
+
+The first thing I would want to understand is how enquiries reach you today and where they tend to get missed.

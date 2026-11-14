@@ -86,30 +86,29 @@ These spaces are here for screenshots from the actual project. The notes explain
 ### 1. New enquiry workflow
 
 <!-- Add screenshot: images/01-enquiry-workflow.png -->
-![New enquiry workflow](https://github.com/manuel-sam/brightpath-lead-intake-automation/commit/0592c003fb48015e15bdd7be559fd7945b949332)
+![New enquiry workflow](https://github.com/manuel-sam/brightpath-lead-intake-automation/blob/main/1%20Brightpath%20automation%20ai%20automation%20gmail%20node%20n8n%20automation.png)
 
-*Capture the full first workflow on the n8n canvas. Zoom out enough to show the form, lead scoring, Google Sheets, follow-up message, and review steps. Keep the node labels readable.*
+
 
 ### 2. Daily summary workflow
 
 <!-- Add screenshot: images/02-daily-summary-workflow.png -->
-![Daily summary workflow](images/02-daily-summary-workflow.png)
+![Daily summary workflow](https://github.com/manuel-sam/brightpath-lead-intake-automation/blob/main/2%20Brightpath%20ai%20automation%20n8n%20automation%20gmail%20node%20google%20sheet.png)
 
-*Open the Brightpath Daily Lead Summary workflow in n8n. Capture the full canvas showing the schedule, Google Sheets lookup, 24-hour filter, summary creation, and email step.*
+
 
 ### 3. Enquiry form
 
 <!-- Add screenshot: images/03-enquiry-form.png -->
-![Enquiry form](images/03-enquiry-form.png)
+![Enquiry form](https://github.com/manuel-sam/brightpath-lead-intake-automation/blob/main/BrightPath%20Form.png)
 
-*Open the form preview for the first workflow. Capture the blank form with the questions a potential customer answers, including their contact details, service interest, budget, urgency, and project description.*
+
 
 ### 4. Lead tracking sheet
 
 <!-- Add screenshot: images/04-lead-tracking-sheet.png -->
-![Lead tracking sheet](images/04-lead-tracking-sheet.png)
+![Lead tracking sheet](https://github.com/manuel-sam/brightpath-lead-intake-automation/blob/main/BrightPath%20google%20sheet.png)
 
-*Open the Google Sheet used by the workflows. Capture the column headings and a few sample rows so someone can see how enquiries, scores, and categories are recorded. Use made-up sample details only.*
 
 ### 5. Follow-up email
 

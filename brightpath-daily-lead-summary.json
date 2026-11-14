@@ -1,0 +1,149 @@
+{
+  "name": "Brightpath — Daily Lead Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -320,
+        -32
+      ],
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Brightpath Consulting"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_SHEET_TAB",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -112,
+        -32
+      ],
+      "name": "Get row(s) in sheet"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// BRIGHTPATH CONSULTING\n// DAILY LEAD SUMMARY\n// FILTER LAST 24 HOURS\n// ============================================\n\n// Current time\nconst now = new Date();\n\n// 24 hours before now\nconst twentyFourHoursAgo = new Date(\n  now.getTime() - (24 * 60 * 60 * 1000)\n);\n\n// Get all rows from Google Sheets\nconst rows = $input.all();\n\n// ============================================\n// 1. FILTER LEADS FROM LAST 24 HOURS\n// ============================================\n\nconst recentLeads = rows.filter(item => {\n\n  const data = item.json;\n\n  // Support both possible header formats\n  const submittedAt =\n    data['Submitted At'] ||\n    data['SubmittedAt'];\n\n  // If there is no submission date, ignore the row\n  if (!submittedAt) {\n    return false;\n  }\n\n  const submittedDate = new Date(submittedAt);\n\n  // Keep only valid dates within the last 24 hours\n  return (\n    !isNaN(submittedDate.getTime()) &&\n    submittedDate >= twentyFourHoursAgo &&\n    submittedDate <= now\n  );\n});\n\n// ============================================\n// 2. SEPARATE LEADS BY CATEGORY\n// ============================================\n\nconst hotLeads = recentLeads.filter(item => {\n  const category =\n    item.json['Category'] ||\n    item.json['category'];\n\n  return String(category || '').trim().toLowerCase() === 'hot';\n});\n\nconst warmLeads = recentLeads.filter(item => {\n  const category =\n    item.json['Category'] ||\n    item.json['category'];\n\n  return String(category || '').trim().toLowerCase() === 'warm';\n});\n\nconst coldLeads = recentLeads.filter(item => {\n  const category =\n    item.json['Category'] ||\n    item.json['category'];\n\n  return String(category || '').trim().toLowerCase() === 'cold';\n});\n\n// ============================================\n// 3. FUNCTION TO CLEAN LEAD DATA\n// ============================================\n\nfunction formatLead(item) {\n\n  const data = item.json;\n\n  return {\n    lead_id:\n      data['Lead ID'] ||\n      data['LeadID'] ||\n      data['lead_id'] ||\n      '',\n\n    name:\n      data['Name'] ||\n      data['name'] ||\n      '',\n\n    email:\n      data['Email'] ||\n      data['email'] ||\n      '',\n\n    company:\n      data['Company'] ||\n      data['company'] ||\n      '',\n\n    budget:\n      data['Budget'] ||\n      data['budget'] ||\n      '',\n\n    urgency:\n      data['Urgency'] ||\n      data['urgency'] ||\n      '',\n\n    service:\n  data['Service Interest'] ||\n  '',\n\n    score:\n      data['Score'] ||\n      data['score'] ||\n      ''\n  };\n}\n\n// ============================================\n// 4. RETURN DAILY SUMMARY DATA\n// ============================================\n\nreturn [\n  {\n    json: {\n\n      summary_date: now.toISOString(),\n\n      total_leads: recentLeads.length,\n\n      hot_count: hotLeads.length,\n\n      warm_count: warmLeads.length,\n\n      cold_count: coldLeads.length,\n\n      hot_leads: hotLeads.map(formatLead),\n\n      warm_leads: warmLeads.map(formatLead),\n\n      cold_leads: coldLeads.map(formatLead)\n\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        -32
+      ],
+      "name": "Filter Last 24 Hours."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = $json;\n\n// ============================================\n// BRIGHTPATH CONSULTING\n// DAILY LEAD SUMMARY\n// BUILD EMAIL CONTENT\n// ============================================\n\nfunction formatLeads(leads) {\n  if (!leads || leads.length === 0) {\n    return 'None';\n  }\n\n  return leads.map((lead, index) => {\n    return `${index + 1}. ${lead.name} - ${lead.company}\n   Email: ${lead.email}\n   Service: ${lead.service}\n   Budget: ${lead.budget}\n   Urgency: ${lead.urgency}\n   Score: ${lead.score}`;\n  }).join('\\n\\n');\n}\n\nconst summary = `Brightpath Consulting — Daily Lead Summary\n\nLeads received in the last 24 hours: ${data.total_leads}\n\nHOT LEADS (${data.hot_count})\n${formatLeads(data.hot_leads)}\n\nWARM LEADS (${data.warm_count})\n${formatLeads(data.warm_leads)}\n\nCOLD LEADS (${data.cold_count})\n${formatLeads(data.cold_leads)}\n`;\n\nreturn {\n  json: {\n    ...data,\n    summary_text: summary\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        -32
+      ],
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "REPLACE_WITH_YOUR_EMAIL_ADDRESS",
+        "subject": "Brightpath Consulting: Daily Lead Summary",
+        "emailType": "text",
+        "message": "={{ $json.summary_text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        -32
+      ],
+      "name": "Send a message"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter Last 24 Hours.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Last 24 Hours.": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
